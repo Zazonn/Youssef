@@ -1,9 +1,9 @@
 package com.singular.manager.presentation.common
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -16,9 +16,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
-        NavigationItem("Dashboard", Icons.Default.Dashboard, "dashboard"),
+        NavigationItem("Dashboard", Icons.Default.Home, "dashboard"),
         NavigationItem("Profiles", Icons.Default.List, "profile_manager"),
-        NavigationItem("Logger", Icons.Default.Settings, "logger")
+        NavigationItem("Logger", Icons.Default.Info, "logger")
     )
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
