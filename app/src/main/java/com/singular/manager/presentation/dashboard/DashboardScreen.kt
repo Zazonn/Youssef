@@ -1,22 +1,8 @@
 package com.singular.manager.presentation.dashboard
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -26,6 +12,7 @@ import com.singular.manager.di.AppModule
 import com.singular.manager.presentation.common.BottomNavigationBar
 import com.singular.manager.presentation.logger.LoggerViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     navController: NavController,
@@ -56,16 +43,17 @@ fun DashboardScreen(
             } else if (uiState.error != null) {
                 Text("Error: ${uiState.error}", color = Color.Red)
             } else {
-                Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(2.dp)) {
+                Card(modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text("Profiles missing GAID: ", style = MaterialTheme.typography.titleMedium)
-                        Text("${uiState.profilesMissingGaid} profiles", color = if (uiState.profilesMissingGaid > 0) Color.Red else Color.Green)
+                        Text("Profiles missing GAID: ${uiState.profilesMissingGaid}")
+                        Text("Duplicate Emails: ${uiState.duplicateEmails.size}")
+                        Text("Duplicate UIDs: ${uiState.duplicateUids.size}")
                     }
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(2.dp)) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+            }
+        }
+    }
+}
                         Text("Duplicate Emails: ", style = MaterialTheme.typography.titleMedium)
                         if (uiState.duplicateEmails.isNotEmpty()) {
                             uiState.duplicateEmails.forEach { email ->
