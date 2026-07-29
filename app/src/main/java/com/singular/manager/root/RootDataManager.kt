@@ -3,11 +3,11 @@ package com.singular.manager.root
 import com.singular.manager.domain.model.Profile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 
 class RootDataManager {
 
-    // Common paths where GAID might be stored
     private val GAID_PATHS = listOf(
         "/data/data/com.google.android.gms/shared_prefs/adid_settings.xml",
         "/data/data/com.google.android.gms/shared_prefs/advertising_id.xml",
@@ -15,57 +15,55 @@ class RootDataManager {
     )
 
     suspend fun extractGaid(): String? = withContext(Dispatchers.IO) {
-        if (!RootUtils.isRooted()) {
-            println("[ERROR] Device is not rooted. Cannot extract GAID.")
-            return@withContext null
-        }
+        if (!RootUtils.isRooted()) return@withContext null
 
         for (path in GAID_PATHS) {
             val content = RootUtils.readFile(path)
             if (content != null) {
                 val gaid = parseGaidFromXml(content)
-                if (gaid != null) {
-                    println("[DEBUG] GAID extracted from $path: $gaid")
-                    return@withContext gaid
-                }
+                if (gaid != null) return@withContext gaid
             }
         }
-        println("[DEBUG] GAID not found in common paths.")
         return@withContext null
     }
 
     private fun parseGaidFromXml(xmlContent: String): String? {
         try {
             val factory = XmlPullParserFactory.newInstance()
-            factory.isNamespaceAware = true
             val parser = factory.newPullParser()
             parser.setInput(xmlContent.reader())
 
             var eventType = parser.eventType
-            var gaid: String? = null
-
-            while (eventType != parser.END_DOCUMENT) {
-                if (eventType == parser.START_TAG && parser.name == "string") {
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if (eventType == XmlPullParser.START_TAG && parser.name == "string") {
                     val name = parser.getAttributeValue(null, "name")
                     if (name == "advertising_id" || name == "adid") {
                         parser.next()
-                        gaid = parser.text
-                        break
+                        return parser.text
                     }
                 }
                 eventType = parser.next()
             }
-            return gaid
         } catch (e: Exception) {
-            println("[ERROR] Error parsing XML for GAID: ${e.message}")
-            return null
+            e.printStackTrace()
         }
+        return null
     }
 
-    // Placeholder for other data extraction logic (e.g., email, UID if found in system files)
-    suspend fun extractOtherProfileData(): Map<String, String> = withContext(Dispatchers.IO) {
-        val data = mutableMapOf<String, String>()
-        // Implement logic to find email/UID in other system files if applicable
+    suspend fun buildProfileFromDevice(): Profile? = withContext(Dispatchers.IO) {
+        val gaid = extractGaid()
+        if (gaid != null) {
+            return@withContext Profile(
+                name = "Device Profile - ${System.currentTimeMillis()}",
+                gaid = gaid,
+                email = null,
+                uid = null,
+                createdAt = System.currentTimeMillis()
+            )
+        }
+        return@withContext null
+    }
+}
         // For now, this is a placeholder.
         return@withContext data
     }
