@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.SingularManager" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- يمكنك تغيير الألوان هنا لاحقاً -->
+        <item name="colorPrimary">#6650a4</item>
+    </style>
+</resources>
