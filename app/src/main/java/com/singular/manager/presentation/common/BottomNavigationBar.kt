@@ -18,7 +18,7 @@ fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
         NavigationItem("Dashboard", Icons.Default.Dashboard, "dashboard"),
         NavigationItem("Profiles", Icons.Default.List, "profile_manager"),
-        NavigationItem("Logger", Icons.Default.Settings, "logger") // Using settings icon for logger for now
+        NavigationItem("Logger", Icons.Default.Settings, "logger")
     )
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -30,17 +30,12 @@ fun BottomNavigationBar(navController: NavController) {
                 selected = currentRoute == item.route,
                 onClick = {
                     navController.navigate(item.route) {
-                        // Pop up to the start destination of the graph to
-                        // avoid building up a large stack of destinations
-                        // on the back stack as users select items
-                        navController.graph.startDestinationRoute?.let {\n                            popUpTo(it) {
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
                                 saveState = true
                             }
                         }
-                        // Avoid multiple copies of the same destination when
-                        // reselecting the same item
                         launchSingleTop = true
-                        // Restore state when reselecting previously selected item
                         restoreState = true
                     }
                 }
