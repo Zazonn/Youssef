@@ -7,7 +7,6 @@ import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 
 class RootDataManager {
-
     private val GAID_PATHS = listOf(
         "/data/data/com.google.android.gms/shared_prefs/adid_settings.xml",
         "/data/data/com.google.android.gms/shared_prefs/advertising_id.xml",
@@ -23,9 +22,7 @@ class RootDataManager {
                     if (gaid != null) return@withContext gaid
                 }
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        } catch (e: Exception) { e.printStackTrace() }
         return@withContext null
     }
 
@@ -34,7 +31,6 @@ class RootDataManager {
             val factory = XmlPullParserFactory.newInstance()
             val parser = factory.newPullParser()
             parser.setInput(xmlContent.reader())
-
             var eventType = parser.eventType
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG && parser.name == "string") {
@@ -46,9 +42,7 @@ class RootDataManager {
                 }
                 eventType = parser.next()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        } catch (e: Exception) { e.printStackTrace() }
         return null
     }
 
@@ -60,26 +54,6 @@ class RootDataManager {
                 gaid = gaid,
                 email = null,
                 uid = null,
-                createdAt = System.currentTimeMillis()
-            )
-        }
-        return@withContext null
-    }
-}
-    }
-
-    suspend fun buildProfileFromDevice(): Profile? = withContext(Dispatchers.IO) {
-        val gaid = extractGaid()
-        val otherData = extractOtherProfileData()
-
-        if (gaid != null) {
-            // For now, name can be a generic device name or timestamp
-            // In a real app, you might prompt the user for a name
-            return@withContext Profile(
-                name = "Device Profile - ${System.currentTimeMillis()}",
-                gaid = gaid,
-                email = otherData["email"],
-                uid = otherData["uid"],
                 createdAt = System.currentTimeMillis()
             )
         }
