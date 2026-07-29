@@ -1,6 +1,5 @@
 package com.singular.manager.presentation.logger
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.singular.manager.di.AppModule
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoggerScreen(
     loggerViewModel: LoggerViewModel = viewModel { AppModule.provideLoggerViewModel() }
@@ -50,7 +51,7 @@ fun LoggerScreen(
                 .padding(paddingValues)
         ) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(logMessages) {\n                    log ->
+                items(logMessages) { log ->
                     LogMessageItem(logMessage = log)
                 }
             }
