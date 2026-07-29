@@ -15,14 +15,16 @@ class RootDataManager {
     )
 
     suspend fun extractGaid(): String? = withContext(Dispatchers.IO) {
-        if (!RootUtils.isRooted()) return@withContext null
-
-        for (path in GAID_PATHS) {
-            val content = RootUtils.readFile(path)
-            if (content != null) {
-                val gaid = parseGaidFromXml(content)
-                if (gaid != null) return@withContext gaid
+        try {
+            for (path in GAID_PATHS) {
+                val content = RootUtils.readFile(path)
+                if (content != null) {
+                    val gaid = parseGaidFromXml(content)
+                    if (gaid != null) return@withContext gaid
+                }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
         return@withContext null
     }
@@ -64,8 +66,6 @@ class RootDataManager {
         return@withContext null
     }
 }
-        // For now, this is a placeholder.
-        return@withContext data
     }
 
     suspend fun buildProfileFromDevice(): Profile? = withContext(Dispatchers.IO) {
