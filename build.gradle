@@ -1,0 +1,27 @@
+buildscript {
+    ext {
+        compose_version = '1.6.8'
+        compose_compiler_version = '1.5.14'
+        kotlin_version = '1.9.23'
+        room_version = '2.6.1'
+        retrofit_version = '2.9.0'
+        okhttp_version = '4.12.0'
+        libsu_version = '4.0.3'
+    }
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.2.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
